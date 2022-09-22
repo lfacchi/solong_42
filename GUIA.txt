@@ -1,0 +1,11 @@
+Adicionar colecionaveis e saida 
+    contagem de colecionaveis e verificar a interação dele com o mapa 
+
+Criar movimentação ok
+    trocar a posição na mtrix e renderiza apenas as trocas de posição ok
+
+Fazer a leitura do mapa dinamicamente ok 
+    fazer a validação do mapa
+
+animação do personagem 
+    animação parado e na troca de posição
