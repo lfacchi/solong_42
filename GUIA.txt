@@ -6,6 +6,14 @@ Criar movimentação ok
 
 Fazer a leitura do mapa dinamicamente ok 
     fazer a validação do mapa
+        algoritimo de backtracking 
+            criar uma strutura de linked list que vai armazenar caminhos validos
+            verificação de possiveis proximos movimentos e a cada 
 
 animação do personagem 
-    animação parado e na troca de posição
+    animação parado e na troca de posição ok
+
+Finalizar o jogo 
+    mensagem na tela de jogo finalizado 
+    dar free no game
+    

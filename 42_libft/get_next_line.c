@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lucdos-s < lucdos-s@student.42sp.org.br    +#+  +:+       +#+        */
+/*   By: lucdos-s <lukas.facchi@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 23:17:01 by  lucdos-s         #+#    #+#             */
-/*   Updated: 2022/07/19 19:23:22 by lucdos-s         ###   ########.fr       */
+/*   Updated: 2022/10/17 20:01:31 by lucdos-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,5 +127,8 @@ char	*ft_join_line(char *line)
 		return (temp);
 	}
 	else
+	{
+		free(temp);
 		return (line);
+	}
 }
