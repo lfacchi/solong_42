@@ -61,6 +61,7 @@ typedef struct sprites
 	void *wall;
 	void *colect;
 	void *exit;
+	void *blackbox;
 }t_sprites;
 
 typedef struct s_game{
@@ -68,6 +69,7 @@ typedef struct s_game{
 	void *window;
 	t_map map;
 	t_sprites sprites;
+	int moves;
 }t_game;
 
 char	**ft_matrix_alocate(int x , int y);
@@ -88,3 +90,5 @@ int		ft_dfs(int **int_matrix, int x, int y);
 int		**ft_transform_matrix(char **matrix, int x, int y);
 int		**ft_alocate_m_int(int x, int y);
 void	fn(t_game *game);
+void	ft_render_moves(t_game *game);
+void	ft_pos_swap(t_game *game, char **matrix, int x1, int y1, int x2, int y2);

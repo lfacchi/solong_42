@@ -5,13 +5,12 @@ Criar movimentação ok
     trocar a posição na mtrix e renderiza apenas as trocas de posição ok
 
 Fazer a leitura do mapa dinamicamente ok 
-    fazer a validação do mapa
-        algoritimo de backtracking 
-            criar uma strutura de linked list que vai armazenar caminhos validos
-            verificação de possiveis proximos movimentos e a cada 
+    fazer a validação do mapa ok
+        algoritimo de backtracking ok
+            recursão para varrer mapa ok
 
-animação do personagem 
-    animação parado e na troca de posição ok
+animação do personagem ok
+    animação paradook
 
 Finalizar o jogo 
     mensagem na tela de jogo finalizado 

@@ -42,13 +42,12 @@ void	ft_img_create(t_game *game)
 		free(sufix);
 		free(ext);
 		free(path);
-
 	}
 	colect = mlx_xpm_file_to_image(game->init, "sprites/colect.xpm", &size, &size);
 	game->sprites.colect = colect;
 	exit = mlx_xpm_file_to_image(game->init, "sprites/exit.xpm", &size, &size);
 	game->sprites.exit = exit;
-	
+	game->sprites.blackbox =  mlx_xpm_file_to_image(game->init, "sprites/blackbox.xpm", &size, &size);
 }
 
 //Loop the map keep info of row colums number of collects, player position and exit position 
@@ -86,6 +85,7 @@ void	ft_scan_map(t_game *game, char *path_map)
 		game->map.rdmap.row++;
 		line = get_next_line(game->map.fd);
 	}
+	printf("%d\n", game->map.rdmap.row);
 	close(game->map.fd);
 }
 
@@ -95,7 +95,7 @@ void	ft_ass_map(t_game *game, char *path_map)
 	int		i;
 	char	*line;
 
-	
+	game->moves = 0;
 	line = "";
 	i = 0;
 	if (game->map.rdmap.col && game->map.rdmap.row)
@@ -121,6 +121,8 @@ int	ft_render_map(t_game *game)
 	int	posx;
 	int	posy;
 
+
+	// mlx_clear_window(game->init,game->window);
 	i = 0;
 	while (game->map.rdmap.matrix[i])
 	{
@@ -163,5 +165,22 @@ int	ft_animate(t_game *game)
 		mlx_put_image_to_window(game->init, game->window, game->sprites.player[i], x, y);
 		i++;
 	}
+	ft_render_map(game);
+	ft_render_moves(game);
 	return(0);
+}
+
+void ft_render_moves(t_game *game)
+{
+	char *moves;
+	char *prefix;
+	char *full;
+
+	prefix = "Moves: ";
+	moves = ft_itoa(game->moves);
+	full = ft_strjoin(prefix,moves);
+	mlx_put_image_to_window(game->init, game->window, game->sprites.blackbox, 10, ((game->map.rdmap.row) * PIXEL_MAP));
+	mlx_string_put(game->init, game->window, (game->map.rdmap.row), (((game->map.rdmap.row + 1) * PIXEL_MAP) - (PIXEL_MAP/2)), 0xf8f8ff, full);
+	free(moves);
+	free(full);
 }

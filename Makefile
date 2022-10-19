@@ -14,7 +14,9 @@ NAME = solong
 LIBFT = libft/libft.a
 FLAGS = -Wall -Wextra -Werror
 SRCS = events.c render.c main.c validation.c
-MAP = maps/teste.ber
+TEST = maps/teste.ber
+MAP = maps/map1.ber
+
 
 all:
 	@clear
@@ -25,3 +27,11 @@ mem:
 	@clear
 	@gcc -g3 $(SRCS) 42_libft/libft.a -Iminilibx-linux -Lminilibx-linux -lmlx -lXext -lX11
 	@valgrind --show-leak-kinds=all --leak-check=full -s ./a.out $(MAP)
+memt:
+	@clear
+	@gcc -g3 $(SRCS) 42_libft/libft.a -Iminilibx-linux -Lminilibx-linux -lmlx -lXext -lX11
+	@valgrind --show-leak-kinds=all --leak-check=full -s ./a.out $(TEST)
+t:
+	@clear
+	@gcc $(SRCS) 42_libft/libft.a -Iminilibx-linux -Lminilibx-linux -lmlx -lXext -lX11
+	@./a.out $(TEST)
