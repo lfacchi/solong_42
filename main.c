@@ -12,29 +12,25 @@
 
 #include "solong.h"
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	t_game	game;
 	void	*mlx;
 	void	*mlx_win;
-	int		x;
-	int		y;
 	t_pos	p;
 
 	init_game(&game, argv[1]);
-	check_error(&game,argv[1]);
-	
-	x = (game.map.rdmap.row + 1) * PIXEL_MAP;
-	y = game.map.rdmap.col * PIXEL_MAP;
+	check_error(&game, argv[1]);
+	p.x = (game.map.rdmap.row + 1) * PIXEL_MAP;
+	p.y = game.map.rdmap.col * PIXEL_MAP;
 	game.init = mlx;
 	game.window = mlx_win;
-	game.init= mlx_init();
-	game.window = mlx_new_window(game.init, y, x, "DUNGEONS AND DRAGONS");
-
+	game.init = mlx_init();
+	game.window = mlx_new_window(game.init, p.y, p.x, "DUNGEONS AND DRAGONS");
 	img_create(&game);
 	render_map(&game, p);
-	// mlx_loop_hook(game.init, ft_animate, &game);
+	mlx_loop_hook(game.init, ft_animate, &game);
 	mlx_key_hook(game.window, keyboard, &game);
-	mlx_hook(game.window , 17, 0, finish_game, &game);
+	mlx_hook(game.window, 17, 0, finish_game, &game);
 	mlx_loop(game.init);
 }

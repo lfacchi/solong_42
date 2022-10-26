@@ -29,18 +29,7 @@ void	scan_map(t_game *game, char *path_map)
 	{
 		col = -1;
 		while (line[++col])
-		{
-			if (line[col] == 'E')
-				game->map.rdmap.e++;
-			if (line[col] == 'C')
-				game->map.rdmap.colects++;
-			if (line[col] == 'P')
-			{
-				game->map.rdmap.p++;
-				game->map.p_posy = row;
-				game->map.p_posx = col;
-			}
-		}
+			verify_coordanates(game, line[col], row, col);
 		row++;
 		free(line);
 		line = get_next_line(fd);

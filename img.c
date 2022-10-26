@@ -16,6 +16,7 @@
 void	img_create(t_game *game)
 {
 	int		size;
+
 	game->sprites.floor = mlx_xpm_file_to_image(game->init,
 			"sprites/floor.xpm", &size, &size);
 	game->sprites.wall = mlx_xpm_file_to_image(game->init,
@@ -49,4 +50,18 @@ void	player_img_create(t_game *game)
 		free(ext);
 		free(path);
 	}
+}
+
+void	verify_coordanates(t_game *game, char c, int row, int col)
+{
+	if (c == 'E')
+		game->map.rdmap.e++;
+	if (c == 'C')
+		game->map.rdmap.colects++;
+	if (c == 'P')
+	{
+		game->map.rdmap.p++;
+		game->map.p_posy = row;
+		game->map.p_posx = col;
+	}	
 }

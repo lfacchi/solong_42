@@ -113,5 +113,6 @@ void	move_up(t_game *game, t_pos i, t_pos f);
 //img.c
 void	img_create(t_game *game);
 void	player_img_create(t_game *game);
+void	verify_coordanates(t_game *game, char c, int row, int col);
 
 #endif
