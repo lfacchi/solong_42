@@ -5,17 +5,17 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lucdos-s <lukas.facchi@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/15 17:22:31 by lucdos-s          #+#    #+#             */
-/*   Updated: 2022/09/15 17:22:31 by lucdos-s         ###   ########.fr       */
+/*   Created: 2022/10/25 12:04:40 by lucdos-s          #+#    #+#             */
+/*   Updated: 2022/10/25 12:04:40 by lucdos-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "solong.h"
 
-void	fn(t_game *game)
+void	print_map(t_game *game)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (game->map.rdmap.matrix[i])
@@ -28,100 +28,61 @@ void	fn(t_game *game)
 	printf("\n");
 }
 
-int ft_keyboard(int key, t_game *game)
+int	keyboard(int key, t_game *game)
 {
-	if (key == 65361 && game->map.rdmap.matrix[game->map.p_posy][game->map.p_posx - 1] != '1')
-	{
-		ft_count_colect(game,game->map.rdmap.matrix[game->map.p_posy][game->map.p_posx - 1]);
-		ft_matrix_move(game, key);
-	}
-	if (key == 65362 && game->map.rdmap.matrix[game->map.p_posy - 1][game->map.p_posx] != '1')
-	{
-		ft_count_colect(game, game->map.rdmap.matrix[game->map.p_posy - 1][game->map.p_posx]);
-		ft_matrix_move(game, key);
-	}
-	if (key == 65363 && game->map.rdmap.matrix[game->map.p_posy][game->map.p_posx + 1] != '1')
-	{
-		ft_count_colect(game, game->map.rdmap.matrix[game->map.p_posy][game->map.p_posx + 1]);
-		ft_matrix_move(game, key);
-	}
-	if (key == 65364 && game->map.rdmap.matrix[game->map.p_posy + 1][game->map.p_posx] != '1')
-	{
-		ft_count_colect(game, game->map.rdmap.matrix[game->map.p_posy + 1][game->map.p_posx]);
-		ft_matrix_move(game , key);
-	}
-	ft_render_map(game);
-	if (key == 65307)
-		ft_finish_game(game);
-}
-
-void ft_matrix_move(t_game *game, int key)
-{
-	int x;
-	int y;
+	char	move;
+	int		x;
+	int		y;
+	t_pos	p;
 
 	x = game->map.p_posx;
 	y = game->map.p_posy;
-	if (key == 65361)
-		ft_pos_swap(game, game->map.rdmap.matrix, y , x, y, (x - 1));
-	if (key == 65363)
-		ft_pos_swap(game, game->map.rdmap.matrix, y, x, y, (x + 1));
-	if (key == 65362)
-		ft_pos_swap(game, game->map.rdmap.matrix, y , x, (y - 1), x);
-	if (key == 65364)
-		ft_pos_swap(game, game->map.rdmap.matrix, y , x, (y + 1), x);
+	if (key == 65361 && game->map.rdmap.matrix[y][x - 1] != '1')
+		count_colect(game, game->map.rdmap.matrix[y][game->map.p_posx - 1]);
+	if (key == 65362 && game->map.rdmap.matrix[y - 1][x] != '1')
+		count_colect(game, game->map.rdmap.matrix[y - 1][x]);
+	if (key == 65363 && game->map.rdmap.matrix[y][x + 1] != '1')
+		count_colect(game, game->map.rdmap.matrix[y][x + 1]);
+	if (key == 65364 && game->map.rdmap.matrix[y + 1][x] != '1')
+		count_colect(game, game->map.rdmap.matrix[y + 1][x]);
+	move_player(game, key);
+	render_map(game, p);
+	if (key == 65307)
+		finish_game(game);
+	return (0);
 }
 
-void ft_count_colect(t_game	*game, char next_move)
+int	check_error(t_game *game, char *map_path)
 {
-	if (next_move == 'C')
-		game->map.rdmap.colects--;
-	if (game->map.rdmap.colects == 0 && next_move == 'E')
-		ft_finish_game(game);
-}
-
-int ft_finish_game(t_game *game)
-{
-	int i;
-
-	mlx_clear_window(game->init, game->window);
-	mlx_destroy_image(game->init, game->sprites.wall);
-	mlx_destroy_image(game->init, game->sprites.floor);
-	mlx_destroy_image(game->init, game->sprites.exit);
-	mlx_destroy_image(game->init, game->sprites.colect);
-	mlx_destroy_image(game->init, game->sprites.blackbox);
-	i = -1;
-	while(++i < 10)
-		mlx_destroy_image(game->init, game->sprites.player[i]);
-	mlx_destroy_window(game->init, game->window);
-	mlx_destroy_display(game->init);
-	i = -1;
-	while(++i < game->map.rdmap.row)
-		free(game->map.rdmap.matrix[i]);
-	free(game->map.rdmap.matrix[i]);
-	free(game->init);
-	free(game->map.rdmap.matrix);
-	exit(0);
-}
-void ft_pos_swap(t_game *game,char **matrix, int y1, int x1, int y2, int x2)
-{
-	char temp;
-
-	if (matrix[y2][x2] != 'E')
+	if (!is_valid(game) || !is_valid_inputs(game)
+		|| !is_valid_map_entry(map_path))
 	{
-		temp = matrix[y1][x1];
-		matrix[y1][x1] = '0';
-		matrix[y2][x2] = 'P';
-		game->map.p_posx = x2;
-		game->map.p_posy = y2;
-		game->moves++;
+		ft_putendl_fd("Error", 1);
+		exit(1);
 	}
-	else if(game->map.rdmap.colects == 0)
+	if (!is_valid_path(game) || !is_valid_rectangle(game))
 	{
-		matrix[y1][x1] = '0';
-		matrix[y2][x2] = 'P';
-		game->map.p_posx = x2;
-		game->map.p_posy = y2;
-		game->moves++;
+		ft_putendl_fd("Error", 1);
+		finish_game(game);
+		exit(1);
 	}
+}
+
+void	render_moves(t_game *game)
+{
+	char	*moves;
+	char	*prefix;
+	char	*full;
+
+	prefix = "Moves: ";
+	moves = ft_itoa(game->moves);
+	full = ft_strjoin(prefix, moves);
+	mlx_put_image_to_window(game->init, game->window,
+		game->sprites.blackbox, 10, ((game->map.rdmap.row) * PIXEL_MAP));
+	mlx_string_put(game->init, game->window,
+		(game->map.rdmap.row),
+		(((game->map.rdmap.row + 1) * PIXEL_MAP) - (PIXEL_MAP / 2)),
+		0xf8f8ff, full);
+	free(moves);
+	free(full);
 }

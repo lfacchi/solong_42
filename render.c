@@ -6,181 +6,116 @@
 /*   By: lucdos-s <lukas.facchi@gmail.com>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/15 17:40:14 by lucdos-s          #+#    #+#             */
-/*   Updated: 2022/09/15 17:40:14 by lucdos-s         ###   ########.fr       */
+/*   Updated: 2022/10/20 10:53:39 by lucdos-s         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "solong.h"
 
-//Create the images from the ".xpm" files
-void	ft_img_create(t_game *game)
+/* Loop the map keep info of row colums number of collects,
+player position and exit position  */
+void	scan_map(t_game *game, char *path_map)
 {
-	int		size;
-	int		i;
-	void	*floor;
-	void	*player[10];
-	void	*colect;
-	void	*wall;
-	void	*exit;
-	char	*path;
-	char	*sufix;
-	char	*ext;
-	i = 0;
-	floor = mlx_xpm_file_to_image(game->init, "sprites/floor.xpm", &size, &size);
-	game->sprites.floor = floor;
-	wall = mlx_xpm_file_to_image(game->init, "sprites/rwall.xpm", &size, &size);
-	game->sprites.wall = wall;
-	while (i < 10)
-	{
+	char	*line;
+	int		row;
+	int		col;
+	int		fd;
 
-		sufix = ft_itoa(i + 1);
-		path = ft_strjoin("sprites/idle/idle", sufix);
-		ext =  ft_strjoin(path,".xpm");
-		player[i] = mlx_xpm_file_to_image(game->init, ext, &size, &size);
-		game->sprites.player[i] = player[i];
-		i++;
-		free(sufix);
-		free(ext);
-		free(path);
-	}
-	colect = mlx_xpm_file_to_image(game->init, "sprites/colect.xpm", &size, &size);
-	game->sprites.colect = colect;
-	exit = mlx_xpm_file_to_image(game->init, "sprites/exit.xpm", &size, &size);
-	game->sprites.exit = exit;
-	game->sprites.blackbox =  mlx_xpm_file_to_image(game->init, "sprites/blackbox.xpm", &size, &size);
-}
-
-//Loop the map keep info of row colums number of collects, player position and exit position 
-void	ft_scan_map(t_game *game, char *path_map)
-{
-    int		fd;
-    char	*line;
-    char	*split_line;
-
-	game->map.rdmap.row = 0;
-	game->map.rdmap.colects = 0;
-	line = "";
-	game->map.fd = open(path_map , O_RDONLY );
-	line = get_next_line(game->map.fd);
+	fd = open(path_map, O_RDONLY);
+	line = get_next_line(fd);
+	game->map.rdmap.col = ft_strlen(line) - 2;
+	row = 0;
 	while (line != NULL)
-    {
-		game->map.rdmap.col = 0;
-		while (line[game->map.rdmap.col])
+	{
+		col = -1;
+		while (line[++col])
 		{
-			if (line[game->map.rdmap.col] == 'E')
-			{
-				game->map.rdmap.exity = game->map.rdmap.col;
-				game->map.rdmap.exitx = game->map.rdmap.row;
-			}
-			if (line[game->map.rdmap.col] == 'C')
+			if (line[col] == 'E')
+				game->map.rdmap.e++;
+			if (line[col] == 'C')
 				game->map.rdmap.colects++;
-			if (line[game->map.rdmap.col] == 'P')
+			if (line[col] == 'P')
 			{
-				game->map.p_posy = game->map.rdmap.row;
-				game->map.p_posx = game->map.rdmap.col;
+				game->map.rdmap.p++;
+				game->map.p_posy = row;
+				game->map.p_posx = col;
 			}
-			game->map.rdmap.col++;
 		}
+		row++;
 		free(line);
-		game->map.rdmap.row++;
-		line = get_next_line(game->map.fd);
+		line = get_next_line(fd);
 	}
-	printf("%d\n", game->map.rdmap.row);
-	close(game->map.fd);
+	game->map.rdmap.row = row;
+	close(fd);
 }
 
 //Alocate and assign the map values in a matrix of char 
-void	ft_ass_map(t_game *game, char *path_map)
+void	ass_map(t_game *game, char *path_map)
 {
-	int		i;
 	char	*line;
+	int		fd;
+	int		i;
 
-	game->moves = 0;
-	line = "";
-	i = 0;
-	if (game->map.rdmap.col && game->map.rdmap.row)
+	fd = open(path_map, O_RDONLY);
+	i = -1;
+	game->map.rdmap.matrix = matrix_alocate(game->map.rdmap.row);
+	while (++i < game->map.rdmap.row)
 	{
-		game->map.fd = open(path_map , O_RDONLY);
-		game->map.rdmap.matrix =
-			ft_matrix_alocate(game->map.rdmap.col, game->map.rdmap.row);
-		while (line != NULL)
-		{
-			line = get_next_line(game->map.fd);
-			game->map.rdmap.matrix[i] = ft_strdup(line);
-			i++;
-			free(line);
-		}
+		line = get_next_line(fd);
+		game->map.rdmap.matrix[i] = ft_strtrim(line, "\n");
+		free(line);
 	}
+	close(fd);
 }
 
 //Render the images in game struct to the window
-int	ft_render_map(t_game *game)
+void	render_map(t_game *game, t_pos p)
 {
-	int	i;
-	int	j;
-	int	posx;
-	int	posy;
-
-
-	// mlx_clear_window(game->init,game->window);
-	i = 0;
-	while (game->map.rdmap.matrix[i])
+	p.x = -1;
+	while (++p.x < game->map.rdmap.row)
 	{
-		j = 0;
-		while (game->map.rdmap.matrix[i][j])
+		p.y = -1;
+		while (++p.y < game->map.rdmap.col)
 		{
-			posx = i * PIXEL_MAP;
-			posy = j * PIXEL_MAP;
-			if(game->map.rdmap.matrix[i][j] == 'P')
-				mlx_put_image_to_window(game->init, game->window, game->sprites.player[0], posy, posx);
-			else if(game->map.rdmap.matrix[i][j] == '1')
-				mlx_put_image_to_window(game->init, game->window, game->sprites.wall, posy, posx);
-			else if (game->map.rdmap.matrix[i][j] == 'C')
-				mlx_put_image_to_window(game->init, game->window, game->sprites.colect, posy, posx);
-			else if (game->map.rdmap.matrix[i][j] == 'E')
-				mlx_put_image_to_window(game->init, game->window, game->sprites.exit, posy, posx);
+			if (game->map.rdmap.matrix[p.x][p.y] == 'P')
+				mlx_put_image_to_window(game->init, game->window,
+					game->sprites.player[0], p.y * PIXEL_MAP, p.x * PIXEL_MAP);
+			else if (game->map.rdmap.matrix[p.x][p.y] == '1')
+				mlx_put_image_to_window(game->init, game->window,
+					game->sprites.wall, p.y * PIXEL_MAP, p.x * PIXEL_MAP);
+			else if (game->map.rdmap.matrix[p.x][p.y] == 'C')
+				mlx_put_image_to_window(game->init, game->window,
+					game->sprites.colect, p.y * PIXEL_MAP, p.x * PIXEL_MAP);
+			else if (game->map.rdmap.matrix[p.x][p.y] == 'E')
+				mlx_put_image_to_window(game->init, game->window,
+					game->sprites.exit, p.y * PIXEL_MAP, p.x * PIXEL_MAP);
 			else
-				mlx_put_image_to_window(game->init, game->window, game->sprites.floor, posy, posx);
-			j++;
+				mlx_put_image_to_window(game->init, game->window,
+					game->sprites.floor, p.y * PIXEL_MAP, p.x * PIXEL_MAP);
 		}
-		i++;
 	}
-	return(0);
 }
 
 //Animate the player 
 int	ft_animate(t_game *game)
 {
-	int	size;
-	int	i;
-	int	x;
-	int	y;
+	int		size;
+	int		i;
+	int		x;
+	int		y;
+	t_pos	p;
 
 	x = game->map.p_posx * PIXEL_MAP ;
 	y = game->map.p_posy * PIXEL_MAP ;
 	i = 0;
-	while(i < 10)
+	while (i < 10)
 	{
 		usleep(10000);
-		mlx_put_image_to_window(game->init, game->window, game->sprites.player[i], x, y);
+		mlx_put_image_to_window(game->init, game->window,
+			game->sprites.player[i], x, y);
 		i++;
 	}
-	ft_render_map(game);
-	ft_render_moves(game);
-	return(0);
-}
-
-void ft_render_moves(t_game *game)
-{
-	char *moves;
-	char *prefix;
-	char *full;
-
-	prefix = "Moves: ";
-	moves = ft_itoa(game->moves);
-	full = ft_strjoin(prefix,moves);
-	mlx_put_image_to_window(game->init, game->window, game->sprites.blackbox, 10, ((game->map.rdmap.row) * PIXEL_MAP));
-	mlx_string_put(game->init, game->window, (game->map.rdmap.row), (((game->map.rdmap.row + 1) * PIXEL_MAP) - (PIXEL_MAP/2)), 0xf8f8ff, full);
-	free(moves);
-	free(full);
+	render_map(game, p);
+	render_moves(game);
+	return (0);
 }
