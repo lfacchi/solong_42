@@ -88,7 +88,6 @@ int		dfs(int **int_matrix, int x, int y);
 int		**transform_matrix(char **matrix, int x, int y);
 int		**alocate_m_int(int x, int y);
 void	ft_print_matrix(char **matrix);
-void	print_map(t_game *game);
 //render.c
 void	ass_map(t_game *game, char *path_map);
 void	scan_map(t_game *game, char *path_map);
@@ -105,6 +104,7 @@ void	init_game(t_game *game, char *map_path);
 int		finish_game(t_game *game);
 void	count_colect(t_game	*game, char next_move);
 void	pos_swap(t_game *game, t_pos i, t_pos f);
+void	free_on_error(t_game *game);
 //keyarrow.c
 void	move_right(t_game *game, t_pos i, t_pos f);
 void	move_left(t_game *game, t_pos i, t_pos f);
@@ -114,5 +114,6 @@ void	move_up(t_game *game, t_pos i, t_pos f);
 void	img_create(t_game *game);
 void	player_img_create(t_game *game);
 void	verify_coordanates(t_game *game, char c, int row, int col);
-
+void	is_invalid_char(t_game *game);
+int		is_valid_wall(t_game *game, int row, int col);
 #endif

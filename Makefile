@@ -10,38 +10,38 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = solong
-LIBFT = libft/libft.a
+NAME = so_long
+LIBFT = 42_libft/libft.a
 FLAGS = -Wall -Wextra -Werror
-SRCS = events.c render.c main.c validation.c matrix_utils.c keyarrow.c img.c game.c
+SRCS = events.c render.c main.c validation.c matrix_utils.c keyarrow.c img.c game.c free.c
+X11FLAGS = -Iminilibx-linux -Lminilibx-linux -lmlx -lXext -lX11
 TEST = maps/teste.ber
 MAP = maps/map1.ber
 
 all:
 	@clear
-	@gcc $(SRCS) 42_libft/libft.a -Iminilibx-linux -Lminilibx-linux -lmlx -lXext -lX11
-	@./a.out $(MAP)
+	@gcc $(FLAGS) $(SRCS) $(LIBFT) $(X11FLAGS) -o $(NAME)
 
-mem:
+mem:all
 	@clear
-	@gcc -g3 $(SRCS) 42_libft/libft.a -Iminilibx-linux -Lminilibx-linux -lmlx -lXext -lX11
-	@valgrind --show-leak-kinds=all --leak-check=full -s ./a.out $(MAP)
+	@valgrind --show-leak-kinds=all --leak-check=full -s ./$(NAME) $(MAP)
 
-memt:
+memt:all
 	@clear
-	@gcc -g3 $(SRCS) 42_libft/libft.a -Iminilibx-linux -Lminilibx-linux -lmlx -lXext -lX11
-	@valgrind --show-leak-kinds=all --leak-check=full -s ./a.out $(TEST)
+	@valgrind --show-leak-kinds=all --leak-check=full -s ./$(NAME) $(TEST)
 
 n:
 	@clear
 	@norminette $(SRCS)
 
-t:
+t: all
 	@clear
-	@gcc $(SRCS) 42_libft/libft.a -Iminilibx-linux -Lminilibx-linux -lmlx -lXext -lX11
-	@./a.out $(TEST)
+	@./$(NAME) $(TEST)
 
 clean:
-	@rm a.out
+	@rm -rf ./$(NAME)
+
+fclean: clean
+	@rm -rf ./$(NAME)
 
 re: clean all

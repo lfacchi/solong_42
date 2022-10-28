@@ -88,7 +88,6 @@ void	render_map(t_game *game, t_pos p)
 //Animate the player 
 int	ft_animate(t_game *game)
 {
-	int		size;
 	int		i;
 	int		x;
 	int		y;
@@ -99,7 +98,7 @@ int	ft_animate(t_game *game)
 	i = 0;
 	while (i < 10)
 	{
-		usleep(10000);
+		usleep(100);
 		mlx_put_image_to_window(game->init, game->window,
 			game->sprites.player[i], x, y);
 		i++;

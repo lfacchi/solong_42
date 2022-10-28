@@ -15,7 +15,9 @@
 /* Starts the number of players exits and moves
 and calls the scan and assign map function */
 void	init_game(t_game *game, char *map_path)
-{
+{	
+	game->init = NULL;
+	game->window = NULL;
 	game->map.rdmap.p = 0;
 	game->map.rdmap.e = 0;
 	game->map.rdmap.colects = 0;
@@ -85,11 +87,8 @@ void	count_colect(t_game	*game, char next_move)
 //Swap de position of the player on matrix and count moves
 void	pos_swap(t_game *game, t_pos i, t_pos f)
 {
-	char	temp;
-
 	if (game->map.rdmap.matrix[f.y][f.x] != 'E')
 	{
-		temp = game->map.rdmap.matrix[f.y][f.x];
 		game->map.rdmap.matrix[i.y][i.x] = '0';
 		game->map.rdmap.matrix[f.y][f.x] = 'P';
 		game->map.p_posx = f.x;

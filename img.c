@@ -65,3 +65,54 @@ void	verify_coordanates(t_game *game, char c, int row, int col)
 		game->map.p_posx = col;
 	}	
 }
+
+void	is_invalid_char(t_game *game)
+{
+	int	i;
+	int	j;
+
+i = 0;
+    while (game->map.rdmap.matrix[i])
+    {
+        j = 0;
+        while (game->map.rdmap.matrix[i][j])
+        {
+            if (!ft_strchr("10PCE", game->map.rdmap.matrix[i][j]))
+            {
+                ft_putendl_fd("Error\nInvalid map attribute", 2);
+                free_on_error(game);
+                exit(1);
+            }
+            j++;
+        }
+        i++;
+    }
+}
+
+int	is_valid_wall(t_game *game, int row, int col)
+{
+	int	i;
+	int	j;
+	int	val;
+
+	val = 0;
+	i = -1;
+	j = -1;
+	while (++i < game->map.rdmap.row)
+	{
+		j = -1;
+		while (++j < game->map.rdmap.col)
+		{
+			if ((i == 0 || j == 0)
+				|| (i == (row - 1)) || (j == (col - 1)))
+			{
+				if (game->map.rdmap.matrix[i][j] != '1')
+					val = 1;
+			}
+		}
+	}
+	if (val == 1)
+		return (0);
+	else
+		return (1);
+}

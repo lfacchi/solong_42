@@ -12,25 +12,8 @@
 
 #include "solong.h"
 
-void	print_map(t_game *game)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (game->map.rdmap.matrix[i])
-	{
-		j = 0;
-		while (game->map.rdmap.matrix[i][j])
-			printf("%c", game->map.rdmap.matrix[i][j++]);
-		i++;
-	}
-	printf("\n");
-}
-
 int	keyboard(int key, t_game *game)
 {
-	char	move;
 	int		x;
 	int		y;
 	t_pos	p;
@@ -57,16 +40,39 @@ int	check_error(t_game *game, char *map_path)
 	if (!is_valid(game) || !is_valid_inputs(game)
 		|| !is_valid_map_entry(map_path))
 	{
-		ft_putendl_fd("Error", 1);
+		ft_putendl_fd("Error\n1 - Invalid file or invalid Map", 1);
+		free_on_error(game);
 		exit(1);
 	}
-	if (!is_valid_path(game) || !is_valid_rectangle(game))
+	if (!is_valid_path(game) || !is_valid_rectangle(game)
+		|| !is_valid_wall(game, game->map.rdmap.row, game->map.rdmap.col))
 	{
-		ft_putendl_fd("Error", 1);
-		finish_game(game);
+		ft_putendl_fd("Error\n2 - Invalid Map", 1);
+		free_on_error(game);
 		exit(1);
 	}
+	is_invalid_char(game);
+	return (1);
 }
+// int	check_error(t_game *game, char *map_path)
+// {
+// 	if (!is_valid(game) || !is_valid_inputs(game)
+// 		|| !is_valid_map_entry(map_path))
+// 	{
+// 		ft_putendl_fd("Error\n1 - Invalid file or invalid Map", 1);
+// 		free_on_error(game);
+// 		exit(1);
+// 	}
+// 	if (!is_valid_path(game) || !is_valid_rectangle(game)
+// 		|| !is_valid_wall(game, game->map.rdmap.row, game->map.rdmap.col)
+// 		|| !is_invalid_char(game))
+// 	{
+// 		ft_putendl_fd("Error\n2 - Invalid Map", 1);
+// 		free_on_error(game);
+// 		exit(1);
+// 	}
+// 	return (1);
+// }
 
 void	render_moves(t_game *game)
 {

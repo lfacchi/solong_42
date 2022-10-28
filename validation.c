@@ -19,7 +19,8 @@ int	is_valid_rectangle(t_game *game)
 	int		i;
 
 	i = 0;
-	while (ft_strlen(game->map.rdmap.matrix[i]) - 1 == game->map.rdmap.col)
+	while ((int)(ft_strlen(
+			game->map.rdmap.matrix[i])) - 1 == game->map.rdmap.col)
 		i++;
 	if (i == game->map.rdmap.row)
 		return (1);
