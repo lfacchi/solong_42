@@ -24,7 +24,7 @@ all:
 
 mem:all
 	@clear
-	@valgrind --show-leak-kinds=all --leak-check=full -s ./$(NAME) $(MAP)
+	@valgrind --show-leak-kinds=all --leak-check=full -s ./$(NAME) foo.ber
 
 memt:all
 	@clear

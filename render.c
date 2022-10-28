@@ -23,7 +23,7 @@ void	scan_map(t_game *game, char *path_map)
 
 	fd = open(path_map, O_RDONLY);
 	line = get_next_line(fd);
-	game->map.rdmap.col = ft_strlen(line) - 2;
+	game->map.rdmap.col = ft_strlen(line) - 1;
 	row = 0;
 	while (line != NULL)
 	{
