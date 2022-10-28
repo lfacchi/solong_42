@@ -44,7 +44,7 @@ int	check_error(t_game *game, char *map_path)
 		|| !is_valid_rectangle(game)
 		|| !is_valid_wall(game, game->map.rdmap.row, game->map.rdmap.col))
 	{
-		ft_putendl_fd("Error\nInvalid map or file", 1);
+		ft_putendl_fd("Error 1\nInvalid map or file", 1);
 		free_on_error(game);
 		exit(1);
 	}

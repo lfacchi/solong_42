@@ -23,17 +23,22 @@ void	scan_map(t_game *game, char *path_map)
 
 	fd = open(path_map, O_RDONLY);
 	line = get_next_line(fd);
-	game->map.rdmap.col = ft_strlen(line) - 1;
+	game->map.rdmap.col = ft_strlen(line);
 	row = 0;
 	while (line != NULL)
 	{
-		col = -1;
-		while (line[++col])
+		col = 0;
+		while (line[col] != '\n' && line[col])
+		{
 			verify_coordanates(game, line[col], row, col);
+			col++;
+		}
 		row++;
 		free(line);
 		line = get_next_line(fd);
 	}
+	printf("%d\n", game->map.rdmap.col);
+	game->map.rdmap.col--;
 	game->map.rdmap.row = row;
 	close(fd);
 }
@@ -64,7 +69,7 @@ void	render_map(t_game *game, t_pos p)
 	while (++p.x < game->map.rdmap.row)
 	{
 		p.y = -1;
-		while (++p.y < game->map.rdmap.col)
+		while (++p.y < game->map.rdmap.col - 1)
 		{
 			if (game->map.rdmap.matrix[p.x][p.y] == 'P')
 				mlx_put_image_to_window(game->init, game->window,

@@ -22,7 +22,7 @@ int	main(int argc, char **argv)
 		init_game(&game, argv[1]);
 		check_error(&game, argv[1]);
 		p.x = (game.map.rdmap.row + 1) * PIXEL_MAP;
-		p.y = game.map.rdmap.col * PIXEL_MAP;
+		p.y = (game.map.rdmap.col - 1) * PIXEL_MAP;
 		game.init = mlx_init();
 		game.window = mlx_new_window(game.init,
 				p.y, p.x, "DUNGEONS AND DRAGONS");

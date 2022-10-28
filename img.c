@@ -76,7 +76,7 @@ void	is_invalid_char(t_game *game)
 	while (i < game->map.rdmap.row)
 	{
 		j = 0;
-		while (j < game->map.rdmap.col)
+		while (j < game->map.rdmap.col - 1)
 		{
 			s = ft_strchr("10PCE", game->map.rdmap.matrix[i][j]);
 			if (!s)
@@ -102,10 +102,10 @@ int	is_valid_wall(t_game *game, int row, int col)
 	while (i < game->map.rdmap.row)
 	{
 		j = 0;
-		while (j < game->map.rdmap.col)
+		while (j < game->map.rdmap.col - 1)
 		{
 			if ((i == 0 || j == 0)
-				|| (i == (row - 1)) || (j == (col - 1)))
+				|| (i == (row)) || (j == (col)))
 			{
 				if (game->map.rdmap.matrix[i][j] != '1')
 					val = 1;
